@@ -5,21 +5,23 @@ import 'package:dental_notes/domain/reporitories/workdone_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CurrentMonth extends StatelessWidget {
+class CurrentMonth extends StatefulWidget {
   const CurrentMonth({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<CurrentMonth> createState() => _CurrentMonthState();
+}
+
+class _CurrentMonthState extends State<CurrentMonth> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
       body: BlocProvider(
         create: (context) => CurrentMonthCubit(
-            WorkdoneRepository(WorkdoneRemoteDataSource())..workdone()),
+            WorkdoneRepository(WorkdoneRemoteDataSource()),
+            WorkdoneRemoteDataSource()..workdone()),
         child: BlocBuilder<CurrentMonthCubit, CurrentMonthState>(
           builder: (context, state) {
             // if (snapshot.hasError) {
@@ -29,22 +31,30 @@ class CurrentMonth extends StatelessWidget {
             //         return const Text('Proszę czekać trwa ładowanie danych');
             //       }
 
-            final workdonemodels = state.workdone;
-            return ListView(
-              children: [
-                for (final workdonemodel in workdonemodels) ...[
-                  Column(
+            final workdoneModels = state.workdone;
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: workdoneModels.length,
+                itemBuilder: ((context, index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WorkdoneWidget(
-                        workdoneModel: workdonemodel,
-                      )
+                      Text(workdoneModels[index].date.toString()),
+                      Text(workdoneModels[index].doctor),
+                      Text(workdoneModels[index].patient),
+                      Text(workdoneModels[index].quantity.toString()),
+                      Text(workdoneModels[index].color),
+                      Text(workdoneModels[index].teeth),
+                      Text(workdoneModels[index].type),
                     ],
-                  )
-                ],
-              ],
-            );
+                  );
+                }));
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
       ),
     );
   }

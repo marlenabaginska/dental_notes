@@ -9,23 +9,25 @@ class WorkdoneModel {
 
   final String teeth;
   final String type;
+  final String workdoneId;
 
-  const WorkdoneModel({
-    required this.date,
-    required this.doctor,
-    required this.patient,
-    required this.quantity,
-    required this.color,
-    required this.teeth,
-    required this.type,
-  });
+  const WorkdoneModel(
+      {required this.date,
+      required this.doctor,
+      required this.patient,
+      required this.quantity,
+      required this.color,
+      required this.teeth,
+      required this.type,
+      required this.workdoneId});
 
   WorkdoneModel.fromJson(QueryDocumentSnapshot<Map<String, dynamic>> workdone)
-      : date = workdone['date'],
+      : date = workdone['date'].toDate(),
         doctor = workdone['doctor'],
         patient = workdone['patient'],
         quantity = workdone['quantity'],
         color = workdone['color'],
         teeth = workdone['teeth'],
-        type = workdone['type'];
+        type = workdone['type'],
+        workdoneId = workdone.id;
 }
